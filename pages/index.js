@@ -1,8 +1,10 @@
 import { FileUploader } from "@aws-amplify/ui-react";
+import "@aws-amplify/ui-react/styles.css";
 import { Inter } from "@next/font/google";
 import { Amplify, Storage } from "aws-amplify";
 import Head from "next/head";
 import config from "../aws-exports";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
@@ -35,9 +37,10 @@ export default function Home() {
       <FileUploader
         accept="image/*"
         variation="drop"
+        isPreviewerVisible={true}
         acceptedFileTypes={["image/*"]}
-        accessLevel="protected"
-        onChange={onChange}
+        accessLevel="public"
+        onSuccess={onChange}
       />
     </>
   );
