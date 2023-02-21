@@ -3,6 +3,7 @@ import "@aws-amplify/ui-react/styles.css";
 import { Inter } from "@next/font/google";
 import { Amplify, Storage } from "aws-amplify";
 import Head from "next/head";
+import { useEffect } from "react";
 import config from "../aws-exports";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -10,20 +11,34 @@ const inter = Inter({ subsets: ["latin"] });
 export default function Home() {
   Amplify.configure(config);
 
-  async function onChange(e) {
-    const file = e.target.files[0];
-    const key = file.name;
-    try {
-      Storage.put(file, key, {
-        level: "protected",
-        contentType: "image/*",
-      })
-        .then((result) => console.log(result))
-        .catch((err) => console.log(err));
-    } catch (err) {
-      console.log("error: ", err);
-    }
+  async function listAlbums() {
+    const data = await Storage.list("");
+    console.log("Albums: ", data);
   }
+  async function showPhotos() {
+    const data = await Storage.list("/folder");
+    console.log("Photos in album: ", data);
+  }
+  useEffect(() => {
+    listAlbums();
+    // showPhotos();
+  }, []);
+
+  // async function onChange(e) {
+  //   const file = e.target.files[0];
+  //   const key = file.name;
+  //   try {
+  //     Storage.put(file, key, {
+  //       level: "protected",
+  //       contentType: "image/*",
+  //     })
+  //       .then((result) => console.log(result))
+  //       .catch((err) => console.log(err));
+  //   } catch (err) {
+  //     console.log("error: ", err);
+  //   }
+  // }
+  // Show the photos that exist in an album.
 
   return (
     <>
@@ -37,10 +52,10 @@ export default function Home() {
       <FileUploader
         accept="image/*"
         variation="drop"
+        hasMultipleFiles={true}
         isPreviewerVisible={true}
         acceptedFileTypes={["image/*"]}
         accessLevel="public"
-        onSuccess={onChange}
       />
     </>
   );
